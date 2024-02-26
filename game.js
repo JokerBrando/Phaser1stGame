@@ -42,8 +42,7 @@ function preload ()
     this.load.image('platform', 'assets/tile.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 
-        'assets/knight.png',
+    this.load.spritesheet('dude', 'assets/knight.png',
         { frameWidth: 117, frameHeight: 141 }
     );
     this.load.image('orb', 'assets/orb.png');
@@ -88,7 +87,7 @@ function create ()
     }); */
 
     // гравітація для гравця
-    player.body.setGravityY(500);
+    player.body.setGravityY(300);
     // додає зіткнення гравця з платформами
     this.physics.add.collider(player, platforms);
 
@@ -315,21 +314,21 @@ function saveCookie(data)
 function changeLevel(level)
 {
     platforms.clear(true, true); // очищає всі платформи
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    platforms.create(400, 568, 'platform').setScale(2).refreshBody();
     // рівні повторюються через 3
     if (level % 3 == 1) {
-        platforms.create(600, 400, 'ground');
-        platforms.create(50, 250, 'ground');
-        platforms.create(750, 220, 'ground');
+        platforms.create(600, 400, 'platform');
+        platforms.create(90, 280, 'platform');
+        platforms.create(700, 220, 'platform');
     }
     if (level % 3 == 2) {
-        platforms.create(200, 380, 'ground');
-        platforms.create(100, 250, 'ground');
+        platforms.create(200, 380, 'platform');
+        platforms.create(100, 250, 'platform');
     }
     if (level % 3 == 0) {
-        platforms.create(555, 360, 'ground');
-        platforms.create(100, 200, 'ground');
-        platforms.create(700, 200, 'ground');
+        platforms.create(555, 360, 'platform');
+        platforms.create(100, 200, 'platform');
+        platforms.create(700, 200, 'platform');
     }
 
     scoreIncrement = 9 + level; // змінити кількість очок, що нараховується
