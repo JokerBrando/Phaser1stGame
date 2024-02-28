@@ -42,8 +42,8 @@ function preload ()
     this.load.image('platform', 'assets/tile.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 'assets/knight.png',
-        { frameWidth: 117, frameHeight: 141 }
+    this.load.spritesheet('dude', 'assets/NightBorne.png',
+        { frameWidth: 80, frameHeight: 65 }
     );
     this.load.image('orb', 'assets/orb.png');
 }
@@ -60,22 +60,23 @@ function create ()
     player = this.physics.add.sprite(100, 450, 'dude');
 
     player.setBounce(0.2);
-    player.setScale(0.78);
+    player.setScale(2);
     player.setCollideWorldBounds(true);
 
     // анімація для руху вліво
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-        frameRate: 10,
+        frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 28 }),
+        frameRate: 12,
         repeat: -1 // повторювати анімацію
     });
 
     // анімація для стояння
     this.anims.create({
         key: 'turn',
-        frames: [ { key: 'dude', frame: 3 } ],
-        frameRate: 20
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 8 }),
+        frameRate: 12,
+        repeat: -1 // повторювати анімацію
     });
 
     /* анімація для руху вправо
@@ -146,13 +147,13 @@ function update ()
 {
     if (cursors.left.isDown) // якщо натиснута стрілка вліво
     {
-        player.setVelocityX(-160); // йти вліво
+        player.setVelocityX(-320); // йти вліво
         player.anims.play('left', true);
         player.flipX = true; // повернути вліво
     }
     else if (cursors.right.isDown) // якщо натиснута стрілка вправо
     {
-        player.setVelocityX(160); // йти вправо
+        player.setVelocityX(320); // йти вправо
         player.anims.play('left', true); // грати анімацію руху вправо
         player.flipX = false; // повернути вправо
     }
