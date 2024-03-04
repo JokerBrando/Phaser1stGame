@@ -169,6 +169,7 @@ function update ()
         // стрибнути, якщо натиснута стрілка вгору і гравець торкається землі
         player.setVelocityY(-490);
     }
+    this.cameras.main.startFollow(player);
 }
 
 // коли гравець отримав зірку
@@ -312,26 +313,5 @@ function saveCookie(data)
     document.cookie = "data=" + str + "; expires=Thu, 12 Feb 2026 12:00:00 UTC";
 }
 
-function changeLevel(level)
-{
-    platforms.clear(true, true); // очищає всі платформи
-    platforms.create(400, 568, 'platform').setScale(2).refreshBody();
-    // рівні повторюються через 3
-    if (level % 3 == 1) {
-        platforms.create(600, 400, 'platform');
-        platforms.create(90, 280, 'platform');
-        platforms.create(700, 220, 'platform');
-    }
-    if (level % 3 == 2) {
-        platforms.create(200, 380, 'platform');
-        platforms.create(100, 250, 'platform');
-    }
-    if (level % 3 == 0) {
-        platforms.create(555, 360, 'platform');
-        platforms.create(100, 200, 'platform');
-        platforms.create(700, 200, 'platform');
-    }
 
-    scoreIncrement = 9 + level; // змінити кількість очок, що нараховується
-    levelText.setText('Рівень: ' + level); // змінити текст
-}
+

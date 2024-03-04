@@ -1,12 +1,25 @@
 body {
     margin: 0;
-    height: 100vh;           
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden; /* Забороняємо прокрутку, так як гра повинна відбуватися в межах вікна */
 }
+
+#game-container {
+    position: relative;
+    width: 100vw; /* Ширина вікна браузера */
+    height: 100vh; /* Висота вікна браузера */
+    overflow: hidden; /* Забороняємо прокрутку */
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 100%;
+    image-rendering: pixelated; /* Забезпечуємо збереження піксельного стилю гри */
+}
+
 #leaderboard {
-    font: 150%  "Consolas", monospace;
+    font: 200% "Consolas", monospace;
     margin-left: 1em;
 }
