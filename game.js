@@ -1,7 +1,7 @@
 var config = { // туто ми налаштовуємо сценку
     type: Phaser.AUTO,
-    width: 4096,
-    height: 1716,
+    width: 1980,
+    height: 1080,
     scene: {
         parent:game,
         physics: {  //задаємо стиль фізики гри
@@ -27,7 +27,7 @@ var worldWight = config.width = 2
 
 function preload ()// тут ми завантажуємо потрібні матеріали для гри
 {
-    this.load.image('sky', 'assets/sky.png');
+    this.load.image('sky', 'assets/1.jpg');
     this.load.image('ground', 'assets/tile.png');
     this.load.image('plant', 'assets/plant.png');
     this.load.image('star', 'assets/star.png');
@@ -73,7 +73,7 @@ function collectStar (player, star)
 
 for (var x = 0; x < worldWidth; x = x + 400) {
     console.log(x)
-    platforms.create(x, 1150, 'ground').setOrigin(0, 0).refreshBody().setScale(1);  //тут ми додаємо платформи які спауняться випадковим образом
+    platforms.create(x, 700, 'ground').setOrigin(0, 0).refreshBody().setScale(1);  //тут ми додаємо платформи які спауняться випадковим образом
 }
 
         player = this.physics.add.sprite(100, 450, 'dude');  //додаємо персонажа і задаємо його розміри і ось 
@@ -105,7 +105,7 @@ this.anims.create({
     frameRate: 10,
     repeat: -1
 });
-player.body.setGravityY(50)   //задаємо персонажу гравітацію
+player.body.setGravityY(100)   //задаємо персонажу гравітацію
 this.physics.add.collider(player, platforms);  //створюємо йому колізію
 
 stars = this.physics.add.group({   //додаємо зірочки
