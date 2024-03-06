@@ -17,23 +17,11 @@ var config = {
     }
 };
 
-var game = new Phaser.Game(config);
-
-var score = 0; // кількість очків
-var scoreText; // текстова змінна для очків
-var timer = 0; // *100 мс
-var timerText; // текстова змінна для таймера
-var timerOn = false; // показує, чи увімкнений таймер, що вмикається після першої зібраної зірки
-
-var highScore = 0; // максимальна кількість очок (high score) для оптимізації
-var time120 = 0;
-var time250 = 0;
-var time500 = 0; // змінні, що зберігають час проходження (*100 мс)
-
-var level = 1; // рівень
-var expectedLevel = 1; // рівень для спавна орбів
-var scoreIncrement = 10;
-var levelText;
+var game = new Phaser.Game(config);  //тут ми дещо теж додаємо :)
+var worldWidth = 9600
+var console = console
+var plants;
+var platform;
 
 function preload ()
 {
@@ -54,7 +42,10 @@ function create ()
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
     // платформи (на фіксованих позиціях)
-    platforms = this.physics.add.staticGroup();
+   for(var x=0; x<worldWidth; x=x+450){
+    console.log(x);
+    platform.create(x, 1000, 'ground').setOrigin(0,0).refreshBody();
+   }
     
     // гравець
     player = this.physics.add.sprite(100, 450, 'dude');
@@ -279,39 +270,7 @@ function formatTimerText(time)
     return mText + ":" + sText + "." + ms;
 }
 
-function fetchLeaderboard()
-{
-    let cookies = document.cookie;
-    if (cookies == "") {return;} // якщо не збережено, повернути
-    // cookie має вигляд data=370 156 400 0
-    // по черзі: очки, час до 120, час до 250, час до 500
-    const data = cookies.split("=")[1].split(" "); // поділити по коміркам по черзі
 
-    // окремо задати змінні
-    highScore = data[0];
-    time120 = data[1];
-    time250 = data[2];
-    time500 = data[3];
-
-    updateLeaderboard(data);
-}
-
-function updateLeaderboard(data)
-{
-    // винести дані комірок на лідерборд
-    document.getElementById("highscore").innerHTML = data[0];
-    document.getElementById("time120").innerHTML = formatTimerText(data[1]);
-    document.getElementById("time250").innerHTML = formatTimerText(data[2]);
-    document.getElementById("time500").innerHTML = formatTimerText(data[3]);
-}
-
-function saveCookie(data)
-{
-    // задати вміст cookie
-    str = data[0] +  " " + data[1] + " " + data[2] + " " + data[3];
-    // зберегти cookie
-    document.cookie = "data=" + str + "; expires=Thu, 12 Feb 2026 12:00:00 UTC";
-}
 
 
 
