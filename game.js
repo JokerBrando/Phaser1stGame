@@ -1,23 +1,23 @@
-var config = {
+var config = { // тут ми налаштовуємо сценку
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    // для this.physics
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 300 },
-            debug: false
-        }
-    },
+    width: 1920,
+    height: 1080,
     scene: {
+        parent:game,
+        physics: {  //задаємо стиль фізики гри
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 200 },  //додаємо гравітацію
+                debug: false
+            }
+        },
         preload: preload,
         create: create,
         update: update
     }
 };
 
-var game = new Phaser.Game(config);  //тут ми дещо теж додаємо :)
+var game = new Phaser.Game(config);  
 var worldWidth = 9600
 var console = console
 var plants;
@@ -41,10 +41,10 @@ function create ()
     // додає небо, починаючи з точки (0, 0)
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
-    // платформи (на фіксованих позиціях)
-   for(var x=0; x<worldWidth; x=x+450){
+    
+   for(var x=0; x < worldWidth; x=x+450){
     console.log(x);
-    platform.create(x, 1000, 'ground').setOrigin(0,0).refreshBody();
+    platforms.create(x, 10, 'platform').setOrigin(0,0).refreshBody();
    }
     
     // гравець
@@ -79,7 +79,7 @@ function create ()
     }); */
 
     // гравітація для гравця
-    player.body.setGravityY(300);
+    player.body.setGravityY(100);
     // додає зіткнення гравця з платформами
     this.physics.add.collider(player, platforms);
 
@@ -136,6 +136,10 @@ function create ()
 
 function update ()
 {
+    this.cameras.main.setBounds(0, 0, worldWidth, window.innerHeight);  //робимо камеру щоб вона стежила за гравцем
+    this.physics.world.setBounds(0, 0, worldWidth, window.innerHeight);
+    this.cameras.main.startFollow(player);
+    
     if (cursors.left.isDown) // якщо натиснута стрілка вліво
     {
         player.setVelocityX(-320); // йти вліво
@@ -160,7 +164,8 @@ function update ()
         // стрибнути, якщо натиснута стрілка вгору і гравець торкається землі
         player.setVelocityY(-490);
     }
-    this.cameras.main.startFollow(player);
+
+      
 }
 
 // коли гравець отримав зірку
