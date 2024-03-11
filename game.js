@@ -1,7 +1,7 @@
 var config = { // туто ми налаштовуємо сценку
     type: Phaser.AUTO,
-    width: 4096,
-    height: 1716,
+    width: 1920,
+    height: 1080,
     scene: {
         parent:game,
         physics: {  //задаємо стиль фізики гри
@@ -19,20 +19,21 @@ var config = { // туто ми налаштовуємо сценку
 
 var game = new Phaser.Game(config);  //тут ми дещо теж додаємо :)
 var worldWidth = 9600
-var console = console
+var console = console;
 var plants;
 var platform;
-var worldWight = config.width = 2
+var worldWight = config.width = 10;
 
 
 function preload ()// тут ми завантажуємо потрібні матеріали для гри
 {
-    this.load.image('sky', 'assets/sky.png');
+    this.load.image('sky', 'assets/sky.jpeg');
     this.load.image('ground', 'assets/tile.png');
     this.load.image('plant', 'assets/plant.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('stair', 'assets/stairs.png');
+    this.load.image('spike', 'assets/spike1.png');
     this.load.spritesheet('dude', 
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -44,7 +45,7 @@ function preload ()// тут ми завантажуємо потрібні ма
     {
 
         
-        var score = 0;
+var score = 0;
 var scoreText;
 scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });  //це поки що не надо
 function collectStar (player, star)
@@ -73,7 +74,7 @@ function collectStar (player, star)
 
 for (var x = 0; x < worldWidth; x = x + 400) {
     console.log(x)
-    platforms.create(x, 1150, 'ground').setOrigin(0, 0).refreshBody().setScale(1);  //тут ми додаємо платформи які спауняться випадковим образом
+    platforms.create(x, 700, 'ground').setOrigin(0, 0).refreshBody().setScale(1);  //тут ми додаємо платформи які спауняться випадковим образом
 }
 
         player = this.physics.add.sprite(100, 450, 'dude');  //додаємо персонажа і задаємо його розміри і ось 
@@ -81,6 +82,18 @@ for (var x = 0; x < worldWidth; x = x + 400) {
          player.setBounce(0.1);
          player.setCollideWorldBounds(true);
 
+
+         
+spike = this.physics.add.staticGroup();
+for (var x = 0; x < worldWidth; x=x+Phaser.Math.FloatBetween(200, 500)){
+    spike
+    .create(x, 830 - 120, 'spike')
+    .setOrigin(0, 1)
+    .setScale(Phaser.Math.FloatBetween(0.5, 2))
+    .setDepth(Phaser.Math.Between(-10, 10));
+}
+
+      
 
 
 this.anims.create({   //створюємо анімації для персонажа
@@ -105,7 +118,7 @@ this.anims.create({
     frameRate: 10,
     repeat: -1
 });
-player.body.setGravityY(50)   //задаємо персонажу гравітацію
+player.body.setGravityY(100)   //задаємо персонажу гравітацію
 this.physics.add.collider(player, platforms);  //створюємо йому колізію
 
 stars = this.physics.add.group({   //додаємо зірочки
@@ -123,9 +136,31 @@ stars.children.iterate(function (child) {
 this.physics.add.collider(stars, platforms); // задаємо колізію
 this.physics.add.overlap(player, stars, collectStar, null, this);
 function collectStar (player, star)
+
+
+
 {
     star.disableBody(true, true);
 }
+if (stars.countActive(true) === 0) // якщо немає більше зірок
+{
+    // перезавантажити усі зірки
+    stars.children.iterate(function (child) {
+        child.enableBody(true, child.x, 0, true, true);
+    });
+
+    // обрати x в протилежній частині екрану від гравця, випадково
+    var x = (player.x < 800) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+    // створити одну бомбу
+    var bomb = bombs.create(x, 800, 'bomb');
+    bomb.setBounce(0.999); // майже максимальна стрибучість
+    bomb.setCollideWorldBounds(true);
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20); // з випадковою швидкістю
+
+    // коли усі зірки знову зібрані, додає ще 1 бомбу, і т.д, даючи можливість зібрати ще більше очок
+}
+
 //   // Створення групи рослин
 //   plants = this.physics.add.group({
 //     key: 'plant',
@@ -139,7 +174,8 @@ function collectStar (player, star)
 // });
 
     }
-        
+
+ 
     function update ()
 {
    
