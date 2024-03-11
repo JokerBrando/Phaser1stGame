@@ -1,10 +1,10 @@
 var config = { // туто ми налаштовуємо сценку
     type: Phaser.AUTO,
-<<<<<<< HEAD
+
     width: 1920,
-=======
+
     width: 1980,
->>>>>>> 3e794e34c60d8dc6e61b089be239135e2fd41977
+
     height: 1080,
     scene: {
         parent:game,
@@ -12,7 +12,7 @@ var config = { // туто ми налаштовуємо сценку
             default: 'arcade',
             arcade: {
                 gravity: { y: 200 },  //додаємо гравітацію
-                debug: false
+                debug: true
             }
         },
         preload: preload,
@@ -31,17 +31,18 @@ var worldWight = config.width = 10;
 
 function preload ()// тут ми завантажуємо потрібні матеріали для гри
 {
-<<<<<<< HEAD
+
     this.load.image('sky', 'assets/sky.jpeg');
-=======
+
     this.load.image('sky', 'assets/1.jpg');
->>>>>>> 3e794e34c60d8dc6e61b089be239135e2fd41977
+
     this.load.image('ground', 'assets/tile.png');
     this.load.image('plant', 'assets/plant.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('stair', 'assets/stairs.png');
     this.load.image('spike', 'assets/spike1.png');
+    this.load.image('top', 'assets/2.png');
     this.load.spritesheet('dude', 
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -95,13 +96,17 @@ for (var x = 0; x < worldWidth; x = x + 400) {
 spike = this.physics.add.staticGroup();
 for (var x = 0; x < worldWidth; x=x+Phaser.Math.FloatBetween(200, 500)){
     spike
-    .create(x, 830 - 120, 'spike')
-    .setOrigin(0, 1)
+    .create(x, 800 - 120, 'spike')
+    .setOrigin(0.5, 0.5)
     .setScale(Phaser.Math.FloatBetween(0.5, 2))
     .setDepth(Phaser.Math.Between(-10, 10));
 }
 
-      
+top = this.physics.add.staticGroup();     
+for (var x = 0; x < worldWidth; x = x + 1500) {
+    console.log(x)
+    platforms.create(x, 500, 'top').setOrigin(0, 1).refreshBody().setScale(1);  //тут ми додаємо платформи які спауняться випадковим образом
+}
 
 
 this.anims.create({   //створюємо анімації для персонажа
@@ -126,7 +131,7 @@ this.anims.create({
     frameRate: 10,
     repeat: -1
 });
-player.body.setGravityY(100)   //задаємо персонажу гравітацію
+player.body.setGravityY(10)   //задаємо персонажу гравітацію
 this.physics.add.collider(player, platforms);  //створюємо йому колізію
 
 stars = this.physics.add.group({   //додаємо зірочки
