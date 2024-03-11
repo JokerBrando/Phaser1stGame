@@ -1,6 +1,10 @@
 var config = { // туто ми налаштовуємо сценку
     type: Phaser.AUTO,
+<<<<<<< HEAD
     width: 1920,
+=======
+    width: 1980,
+>>>>>>> 3e794e34c60d8dc6e61b089be239135e2fd41977
     height: 1080,
     scene: {
         parent:game,
@@ -27,7 +31,11 @@ var worldWight = config.width = 10;
 
 function preload ()// тут ми завантажуємо потрібні матеріали для гри
 {
+<<<<<<< HEAD
     this.load.image('sky', 'assets/sky.jpeg');
+=======
+    this.load.image('sky', 'assets/1.jpg');
+>>>>>>> 3e794e34c60d8dc6e61b089be239135e2fd41977
     this.load.image('ground', 'assets/tile.png');
     this.load.image('plant', 'assets/plant.png');
     this.load.image('star', 'assets/star.png');
