@@ -42,7 +42,7 @@ function preload ()// тут ми завантажуємо потрібні ма
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('stair', 'assets/stairs.png');
     this.load.image('spike', 'assets/spike1.png');
-    this.load.image('top', 'assets/2.png');
+    this.load.image('top', 'assets/AAA.png');
     this.load.spritesheet('dude', 
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -103,9 +103,9 @@ for (var x = 0; x < worldWidth; x=x+Phaser.Math.FloatBetween(200, 500)){
 }
 
 top = this.physics.add.staticGroup();     
-for (var x = 0; x < worldWidth; x = x + 1500) {
+for (var x = 0; x < worldWidth; x = x + 750) {
     console.log(x)
-    platforms.create(x, 500, 'top').setOrigin(0, 1).refreshBody().setScale(1);  //тут ми додаємо платформи які спауняться випадковим образом
+    platforms.create(x, 600, 'top').setOrigin(0, 1).refreshBody().setScale(1.1);  //тут ми додаємо платформи які спауняться випадковим образом
 }
 
 
@@ -163,7 +163,7 @@ if (stars.countActive(true) === 0) // якщо немає більше зіро�
     });
 
     // обрати x в протилежній частині екрану від гравця, випадково
-    var x = (player.x < 800) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+    var x = (player.x < 16) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
     // створити одну бомбу
     var bomb = bombs.create(x, 800, 'bomb');
@@ -232,4 +232,18 @@ if (cursors.up.isDown && player.body.touching.down)
     player.setVelocityY(-330);
 }
 
+}
+
+function hitspike (player, spike)
+{
+    this.physics.pause(); // зупинити гру
+
+    player.setTint(0xff0000); // замалювати гравця червоним кольором
+
+    player.anims.play('turn');
+
+
+    gameOver = true;
+
+    location.reload(); // перезавантажити сторінку
 }
