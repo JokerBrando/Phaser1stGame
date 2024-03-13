@@ -1,7 +1,15 @@
 var config = { // туто ми налаштовуємо сценку
     type: Phaser.AUTO,
+
     width: 1920,
     width: 1980,
+
+
+    width: 1920,
+
+    width: 1980,
+
+
     height: 1080,
     scene: {
         parent:game,
@@ -9,7 +17,7 @@ var config = { // туто ми налаштовуємо сценку
             default: 'arcade',
             arcade: {
                 gravity: { y: 200 },  //додаємо гравітацію
-                debug: false
+                debug: true
             }
         },
         preload: preload,
@@ -31,12 +39,18 @@ function preload ()// тут ми завантажуємо потрібні ма
 
     this.load.image('sky', 'assets/sky.jpeg');
     this.load.image('sky', 'assets/1.jpg');
+
+
+    this.load.image('sky', 'assets/1.jpg');
+
+
     this.load.image('ground', 'assets/tile.png');
     this.load.image('plant', 'assets/plant.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('stair', 'assets/stairs.png');
     this.load.image('spike', 'assets/spike1.png');
+    this.load.image('top', 'assets/AAA.png');
     this.load.spritesheet('dude', 
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -90,11 +104,12 @@ for (var x = 0; x < worldWidth; x = x + 400) {
 spike = this.physics.add.staticGroup();
 for (var x = 0; x < worldWidth; x=x+Phaser.Math.FloatBetween(200, 500)){
     spike
-    .create(x, 830 - 120, 'spike')
-    .setOrigin(0, 1)
+    .create(x, 800 - 120, 'spike')
+    .setOrigin(0.5, 0.5)
     .setScale(Phaser.Math.FloatBetween(0.5, 2))
     .setDepth(Phaser.Math.Between(-10, 10));
 }
+
 
 for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(600, 700)) { 
     var y = Phaser.Math.FloatBetween(700, 10 * 10) 
@@ -103,6 +118,14 @@ for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(600, 700)) {
     for (i = 1; i < Phaser.Math.Between(0, 5); i++) {
          platforms.create(x + 700 * i, y, 'ground');
          } platforms.create(x + 700 * i, y, 'ground'); }
+
+top = this.physics.add.staticGroup();     
+for (var x = 0; x < worldWidth; x = x + 750) {
+    console.log(x)
+    platforms.create(x, 600, 'top').setOrigin(0, 1).refreshBody().setScale(1.1);  //тут ми додаємо платформи які спауняться випадковим образом
+}
+
+
 
 this.anims.create({   //створюємо анімації для персонажа
     key: 'left',
@@ -126,7 +149,7 @@ this.anims.create({
     frameRate: 10,
     repeat: -1
 });
-player.body.setGravityY(100)   //задаємо персонажу гравітацію
+player.body.setGravityY(10)   //задаємо персонажу гравітацію
 this.physics.add.collider(player, platforms);  //створюємо йому колізію
 
 stars = this.physics.add.group({   //додаємо зірочки
@@ -158,7 +181,7 @@ if (stars.countActive(true) === 0) // якщо немає більше зіро�
     });
 
     // обрати x в протилежній частині екрану від гравця, випадково
-    var x = (player.x < 800) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+    var x = (player.x < 16) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
     // створити одну бомбу
     var bomb = bombs.create(x, 800, 'bomb');
@@ -266,4 +289,18 @@ if (cursors.up.isDown && player.body.touching.down)
     player.setVelocityY(-330);
 }
 
+}
+
+function hitspike (player, spike)
+{
+    this.physics.pause(); // зупинити гру
+
+    player.setTint(0xff0000); // замалювати гравця червоним кольором
+
+    player.anims.play('turn');
+
+
+    gameOver = true;
+
+    location.reload(); // перезавантажити сторінку
 }
