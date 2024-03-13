@@ -1,10 +1,7 @@
 var config = { // туто ми налаштовуємо сценку
     type: Phaser.AUTO,
-<<<<<<< HEAD
     width: 1920,
-=======
     width: 1980,
->>>>>>> 3e794e34c60d8dc6e61b089be239135e2fd41977
     height: 1080,
     scene: {
         parent:game,
@@ -27,15 +24,13 @@ var console = console;
 var plants;
 var platform;
 var worldWight = config.width = 10;
-
+var life = 5;
 
 function preload ()// тут ми завантажуємо потрібні матеріали для гри
 {
-<<<<<<< HEAD
+
     this.load.image('sky', 'assets/sky.jpeg');
-=======
     this.load.image('sky', 'assets/1.jpg');
->>>>>>> 3e794e34c60d8dc6e61b089be239135e2fd41977
     this.load.image('ground', 'assets/tile.png');
     this.load.image('plant', 'assets/plant.png');
     this.load.image('star', 'assets/star.png');
@@ -101,8 +96,13 @@ for (var x = 0; x < worldWidth; x=x+Phaser.Math.FloatBetween(200, 500)){
     .setDepth(Phaser.Math.Between(-10, 10));
 }
 
-      
-
+for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(600, 700)) { 
+    var y = Phaser.Math.FloatBetween(700, 10 * 10) 
+    platforms.create(x, y, 'ground'); 
+    var i; 
+    for (i = 1; i < Phaser.Math.Between(0, 5); i++) {
+         platforms.create(x + 700 * i, y, 'ground');
+         } platforms.create(x + 700 * i, y, 'ground'); }
 
 this.anims.create({   //створюємо анімації для персонажа
     key: 'left',
@@ -169,6 +169,36 @@ if (stars.countActive(true) === 0) // якщо немає більше зіро�
     // коли усі зірки знову зібрані, додає ще 1 бомбу, і т.д, даючи можливість зібрати ще більше очок
 }
 
+scoreText = this.add.text(100, 100, 'Score: 0', { fontSize: '20px', fill: '#FFF'})
+.setOrigin(0,0)
+.setScrollFactor(0)
+
+lifeText = this.add.text(1500, 100, showLife(), {fontSize: '40px', fill: '#FFF'})
+.setOrigin(0, 0)
+.setScrollFactor(0)
+
+
+var resetButton = this.add.text(400, 450, 'reset', {fontSize: '40px', fill: '#ccc'})
+.setInteractive()
+.setScrollFactor(0);
+
+resetButton.on('pointerdown', function(){
+    console.log('restart')
+    refreshBody()
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 //   // Створення групи рослин
 //   plants = this.physics.add.group({
 //     key: 'plant',
@@ -181,6 +211,15 @@ if (stars.countActive(true) === 0) // якщо немає більше зіро�
 //     child.setGravityY(-200);
 // });
 
+    }
+
+    function showLife() {
+        var lifeLine = 'Життя: '
+    
+        for (var i = 0; i < life; i++ ){
+            lifeLine += '🏓'
+        }
+        return lifeLine
     }
 
  
