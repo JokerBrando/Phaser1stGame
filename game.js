@@ -33,24 +33,20 @@ var plants;
 var platform;
 var worldWight = config.width = 10;
 var life = 5;
+var resetButton = refreshBody;
 
 function preload ()// тут ми завантажуємо потрібні матеріали для гри
 {
-
-    this.load.image('sky', 'assets/sky.jpeg');
-    this.load.image('sky', 'assets/1.jpg');
 
 
     this.load.image('sky', 'assets/1.jpg');
 
 
     this.load.image('ground', 'assets/tile.png');
-    this.load.image('plant', 'assets/plant.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.image('stair', 'assets/stairs.png');
     this.load.image('spike', 'assets/spike1.png');
-    this.load.image('top', 'assets/AAA.png');
+    this.load.image('bullet', 'assets/bullet.png');
     this.load.spritesheet('dude', 
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -88,13 +84,13 @@ function collectStar (player, star)
         // platforms.create(400, 380, 'ground');
         // platforms.create(130, 150, 'ground');
         // platforms.create(600, 350, 'ground'); 
-
+       
 for (var x = 0; x < worldWidth; x = x + 400) {
     console.log(x)
     platforms.create(x, 700, 'ground').setOrigin(0, 0).refreshBody().setScale(1);  //тут ми додаємо платформи які спауняться випадковим образом
 }
 
-        player = this.physics.add.sprite(100, 450, 'dude');  //додаємо персонажа і задаємо його розміри і ось 
+        player = this.physics.add.sprite(500, 450, 'dude');  //додаємо персонажа і задаємо його розміри і ось 
          player.setScale(0.8)
          player.setBounce(0.1);
          player.setCollideWorldBounds(true);
@@ -119,38 +115,33 @@ for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(600, 700)) {
          platforms.create(x + 700 * i, y, 'ground');
          } platforms.create(x + 700 * i, y, 'ground'); }
 
-top = this.physics.add.staticGroup();     
-for (var x = 0; x < worldWidth; x = x + 750) {
-    console.log(x)
-    platforms.create(x, 600, 'top').setOrigin(0, 1).refreshBody().setScale(1.1);  //тут ми додаємо платформи які спауняться випадковим образом
-}
 
 
 
-this.anims.create({   //створюємо анімації для персонажа
-    key: 'left',
-    frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-    frameRate: 10,
-    repeat: -1
-});
+// this.anims.create({   //створюємо анімації для персонажа
+//     key: 'left',
+//     frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+//     frameRate: 10,
+//     repeat: -1
+// });
 
-this.anims.create({
-    key: 'turn',
-    frames: this.anims.generateFrameNumbers("dude", {
-        frames: [4],
-      }),
-    frameRate: 10,
-    repeat: -1
-});
+// this.anims.create({
+//     key: 'turn',
+//     frames: this.anims.generateFrameNumbers("dude", {
+//         frames: [4],
+//       }),
+//     frameRate: 10,
+//     repeat: -1
+// });
 
-this.anims.create({
-    key: 'right',
-    frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-    frameRate: 10,
-    repeat: -1
-});
-player.body.setGravityY(10)   //задаємо персонажу гравітацію
-this.physics.add.collider(player, platforms);  //створюємо йому колізію
+// this.anims.create({
+//     key: 'right',
+//     frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+//     frameRate: 10,
+//     repeat: -1
+// });
+// player.body.setGravityY(10)   //задаємо персонажу гравітацію
+// this.physics.add.collider(player, platforms);  //створюємо йому колізію
 
 stars = this.physics.add.group({   //додаємо зірочки
     key: 'star',
@@ -201,9 +192,10 @@ lifeText = this.add.text(1500, 100, showLife(), {fontSize: '40px', fill: '#FFF'}
 .setScrollFactor(0)
 
 
-var resetButton = this.add.text(400, 450, 'reset', {fontSize: '40px', fill: '#ccc'})
+var resetButton = this.add.text(400, 100, 'reset', {fontSize: '40px', fill: '#ccc'})
 .setInteractive()
-.setScrollFactor(0);
+.setScrollFactor(0)
+
 
 resetButton.on('pointerdown', function(){
     console.log('restart')
@@ -215,25 +207,36 @@ resetButton.on('pointerdown', function(){
 
 
 
+this.input.on('pointerdown', shootBullet, this);
 
 
 
 
 
 
+ this.anims.create({   //створюємо анімації для персонажа
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+     frameRate: 10,
+     repeat: -1 });
 
-//   // Створення групи рослин
-//   plants = this.physics.add.group({
-//     key: 'plant',
-//     repeat: 5,
-//     setXY: { x: 12, y: 0, stepX: 140 }
-// });
+ this.anims.create({
+     key: 'turn',
+     frames: this.anims.generateFrameNumbers("dude", {
+         frames: [4],
+       }),
+     frameRate: 10,
+     repeat: -1
+ });
 
-// // Відключення гравітації для рослин
-// plants.children.iterate(function (child) {
-//     child.setGravityY(-200);
-// });
-
+ this.anims.create({
+     key: 'right',
+     frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+     frameRate: 10,
+     repeat: -1
+ });
+player.body.setGravityY(10)   //задаємо персонажу гравітацію
+this.physics.add.collider(player, platforms);  //створюємо йому колізію
     }
 
     function showLife() {
@@ -275,7 +278,7 @@ else if (cursors.right.isDown)
 {
     player.setVelocityX(160);
 
-    player.anims.play('right', true);
+    player.anims.play('right', false);
 }
 else
 {
@@ -289,6 +292,25 @@ if (cursors.up.isDown && player.body.touching.down)
     player.setVelocityY(-330);
 }
 
+
+
+
+
+if (cursors.right.isDown)
+{
+    player.setVelocityX(160);
+    player.anims.play('right', true);
+}
+else if (cursors.left.isDown)
+{
+    player.setVelocityX(-160);
+    player.anims.play('left', true);
+}
+else
+{
+    player.setVelocityX(0);
+    player.anims.play('turn');
+}
 }
 
 function hitspike (player, spike)
@@ -303,4 +325,18 @@ function hitspike (player, spike)
     gameOver = true;
 
     location.reload(); // перезавантажити сторінку
+}
+
+
+function shootBullet(pointer) {
+    // Створюємо пулю з використанням створеного зображення
+    let bullet = this.physics.add.sprite(player.x, player.y, 'bullet');
+
+    // Визначаємо напрямок руху пулі до місця курсору миші
+    let angle = Phaser.Math.Angle.Between(player.x, player.y, pointer.x, pointer.y);
+    let velocityX = Math.cos(angle) * 5000; // швидкість по горизонталі
+    let velocityY = Math.sin(angle) * 500; // швидкість по вертикалі
+
+    // Встановлюємо швидкість руху пулі
+    bullet.setVelocity(velocityX, velocityY);
 }
