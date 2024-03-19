@@ -1,13 +1,9 @@
 var config = { // туто ми налаштовуємо сценку
     type: Phaser.AUTO,
 
-    width: 1920,
-    width: 1980,
 
 
     width: 1920,
-
-    width: 1980,
 
 
     height: 1080,
@@ -34,6 +30,12 @@ var platform;
 var worldWight = config.width = 10;
 var life = 5;
 var resetButton = refreshBody;
+var playerDirection = 'right';
+var numSkySprites = Math.ceil(config.width / 1920); // 1920 - ширина зображення 'sky'
+
+
+
+
 
 function preload ()// тут ми завантажуємо потрібні матеріали для гри
 {
@@ -46,7 +48,8 @@ function preload ()// тут ми завантажуємо потрібні ма
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('spike', 'assets/spike1.png');
-    this.load.image('bullet', 'assets/bullet.png');
+    this.load.image('skeleton', 'assets/skeleton1.png');
+    this.load.image('bullet', 'assets/bullet1.png');
     this.load.spritesheet('dude', 
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -57,6 +60,8 @@ function preload ()// тут ми завантажуємо потрібні ма
     function create ()
     {
 
+
+        
         
 var score = 0;
 var scoreText;
@@ -72,7 +77,11 @@ function collectStar (player, star)
         cursors = this.input.keyboard.createCursorKeys();
         this.add.image(960, 540, 'sky');   //тут ми можна сказати доаємо на сцену наш фон
     
+
+        
         platforms = this.physics.add.staticGroup();
+
+    
     
         // platforms.create(400, 568, 'ground').setScale(2).refreshBody();    //це не нада взагалі
         // platforms.create(1750, 568, 'ground').setScale(2).refreshBody();
@@ -102,8 +111,8 @@ for (var x = 0; x < worldWidth; x=x+Phaser.Math.FloatBetween(200, 500)){
     spike
     .create(x, 800 - 120, 'spike')
     .setOrigin(0.5, 0.5)
-    .setScale(Phaser.Math.FloatBetween(0.5, 2))
-    .setDepth(Phaser.Math.Between(-10, 10));
+    .setScale(Phaser.Math.FloatBetween(1, 2))
+    .setDepth(Phaser.Math.Between(2, 10));
 }
 
 
@@ -205,6 +214,12 @@ resetButton.on('pointerdown', function(){
 
 
 
+function moveSkeletons(player, skeleton) {
+    if (Math.abs(player.x - skeleton.x) <= 600) {
+        this.physics.moveToObject(skeleton, player, 100);
+    }
+}
+
 
 
 this.input.on('pointerdown', shootBullet, this);
@@ -237,7 +252,46 @@ this.input.on('pointerdown', shootBullet, this);
  });
 player.body.setGravityY(10)   //задаємо персонажу гравітацію
 this.physics.add.collider(player, platforms);  //створюємо йому колізію
+this.physics.add.collider(player, spike, hitspike, null, this);  
+
+
+lifeText = this.add.text(1400, 200, showLife(),{ fontSize: '40px', fill: '#FFF'})
+.setInteractive()
+.setScrollFactor(0);
+
+var skeletons; // Змінна для зберігання групи скелетів
+
+function createSkeletons() {
+    // Створення групи скелетів і додавання фізики
+    skeletons = this.physics.add.group({
+        key: 'skeleton',
+        repeat: 5, // Кількість скелетів
+        setXY: { x: 100, y: 400, stepX: 200 } // Початкові координати і відступ між скелетами
+    });
+
+    // Додавання колізії між скелетами та платформами
+    this.physics.add.collider(skeletons, platforms);
+
+    // Додавання анімації для скелетів (якщо необхідно)
+
+    // Налаштування руху скелетів за гравцем
+    this.physics.add.overlap(player, skeletons, moveSkeletons, null, this);
+}
+function moveSkeletons(player, skeleton) {
+    // Перевірка, чи скелет в межах 600 пікселів
+    if (Math.abs(player.x - skeleton.x) <= 1000) {
+        // Рухаємо скелета в напрямку гравця
+        this.physics.moveToObject(skeleton, player, 100);
     }
+}
+
+
+createSkeletons.call(this);
+
+
+bullet = this.physics.add.group();
+this.physics.add.collider(bullet, skeletons, hitSkeleton, null, this);
+}
 
     function showLife() {
         var lifeLine = 'Життя: '
@@ -313,20 +367,37 @@ else
 }
 }
 
-function hitspike (player, spike)
-{
-    this.physics.pause(); // зупинити гру
 
-    player.setTint(0xff0000); // замалювати гравця червоним кольором
+function createSkeletons() {
+    skeletons = this.physics.add.group({
+        key: 'skeleton',
+        repeat: 5,
+        setXY: { x: 100, y: 0, stepX: 200 }
+    });
 
-    player.anims.play('turn');
-
-
-    gameOver = true;
-
-    location.reload(); // перезавантажити сторінку
+    this.physics.add.collider(skeletons, platforms);
+    this.physics.add.overlap(player, skeletons, moveSkeletons, null, this);
+}
+function hitSkeleton(bullet, skeleton) {
+    skeleton.disableBody(true, true); // Знищуємо скелет
+    bullet.disableBody(true, true); // Знищуємо фаєрбол
 }
 
+function restartGame() {
+    // Перезавантаження гри
+    window.location.reload();
+}
+
+
+function hitspike(player, spike, skeleton) {
+    life--; // Зменшуємо життя гравця
+    lifeText.setText(showLife()); // Оновлюємо текст життя
+    spike.disableBody(true, true); // Вимикаємо спрайт spike
+  
+    if (life <= 0) {
+     restartGame();
+    }
+}
 
 function shootBullet(pointer) {
     // Створюємо пулю з використанням створеного зображення
@@ -334,7 +405,7 @@ function shootBullet(pointer) {
 
     // Визначаємо напрямок руху пулі до місця курсору миші
     let angle = Phaser.Math.Angle.Between(player.x, player.y, pointer.x, pointer.y);
-    let velocityX = Math.cos(angle) * 5000; // швидкість по горизонталі
+    let velocityX = Math.cos(angle) * 500; // швидкість по горизонталі
     let velocityY = Math.sin(angle) * 500; // швидкість по вертикалі
 
     // Встановлюємо швидкість руху пулі
